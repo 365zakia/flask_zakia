@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction Form</title>
+    <style>
+        /* Menggunakan font modern Poppins agar tampilan teks lebih rapi */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* Mengatur halaman dasar agar kotak card berada tepat di tengah layar */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Kotak utama pembungkus form (Card Container) */
+        .card-container {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            max-width: 480px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Desain Judul Utama */
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Mengatur susunan label dan input agar rapi berjejer ke bawah */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5c6b73;
+            margin-bottom: 6px;
+        }
+
+        /* Desain kolom input angka dan dropdown pilihan model */
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffff;
+            color: #2f3640;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* Efek interaktif saat kolom input diklik (Focus) */
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 8px rgba(108, 92, 231, 0.2);
+            background-color: #ffffff;
+        }
+
+        /* Desain Tombol Predict */
+        button {
+            width: 100%;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Efek visual saat kursor mouse diarahkan ke tombol (Hover) */
+        button:hover {
+            background-color: #5b4bc4;
+            box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Efek visual saat tombol ditekan (Active) */
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Kotak pengumuman hasil prediksi (Result Box) */
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            box-sizing: border-box;
+            background-color: #e8f4fd;
+            color: #1d3557;
+            border: 1px solid #b4d6fa;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        /* Animasi halus saat memunculkan hasil prediksi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <h1>Diabetes Prediction Form</h1>
+        
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="pregnancies">Pregnancies:</label>
+                <input type="number" id="pregnancies" name="pregnancies" required>
+            </div>
+
+            <div class="form-group">
+                <label for="glucose">Glucose:</label>
+                <input type="number" id="glucose" name="glucose" required>
+            </div>
+
+            <div class="form-group">
+                <label for="blood_press">Blood Pressure:</label>
+                <input type="number" id="blood_press" name="blood_press" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skin_thickn">Skin Thickness:</label>
+                <input type="number" id="skin_thickn" name="skin_thickn" required>
+            </div>
+
+            <div class="form-group">
+                <label for="insulin">Insulin:</label>
+                <input type="number" id="insulin" name="insulin" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bmi">BMI:</label>
+                <input type="number" step="0.1" id="bmi" name="bmi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="diabetes_pedigree">Diabetes Pedigree Function:</label>
+                <input type="number" step="0.001" id="diabetes_pedigree" name="diabetes_pedigree" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="model">Choose a Model:</label>
+                <select id="model" name="model">
+                    {% for model_name in model_names %}
+                        <option value="{{ model_name }}">{{ model_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction %}
+            <div class="result-box">
+                Prediction Result: {{ prediction }}
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
